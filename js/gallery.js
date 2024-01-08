@@ -81,27 +81,18 @@ const images = [
   galleryList.insertAdjacentHTML('beforeend', galleryItemsMarkup);
   galleryList.addEventListener('click', event => {
     event.preventDefault();
-    if (event.target === event.currentTarget) return;
-    const largeImageUrl = event.target.dataset.source;
-    console.log(largeImageUrl);
-  });
-  galleryList.addEventListener('click', event => {
-    event.preventDefault();
-    if (event.target === event.currentTarget) return;
+    if (event.target.nodeName !== 'IMG') return;
     const largeImageUrl = event.target.dataset.source;
     const instance = basicLightbox.create(`
       <img src="${largeImageUrl}" width="1112" height="640">
     `);
-    instance.show();
-    document.addEventListener('keydown', closeModalOnEscape);
-  function closeModalOnEscape(event) {
-    if (event.code === 'Escape') {
-        instance.close();
-        document.removeEventListener('keydown', closeModalOnEscape);
+    instance.show(() => {document.addEventListener('keydown', closeModalOnEscape)});
+    function closeModalOnEscape(event) {
+        if (event.code === 'Escape') {
+            instance.close(() => {document.removeEventListener('keydown', closeModalOnEscape)});
+        }
     }
-}
-  });
-  
+})
 
 
 
